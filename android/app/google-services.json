@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "94245277378",
+    "project_id": "privaap-2fce9",
+    "storage_bucket": "privaap-2fce9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94245277378:android:4dea5a4fc304a84c8db55b",
+        "android_client_info": {
+          "package_name": "com.comarca.privaap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "94245277378-h8oh3ibmcnq7ej568grpk7a7rhgu3423.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.comarca.privaap",
+            "certificate_hash": "efd565a3b237cccdcf413836cc101998e9906a91"
+          }
+        },
+        {
+          "client_id": "94245277378-h4hi0hom9uhst8ig13trmkkbcoidjqmm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDH_3RICyXXHC-PVTXlooAU26ZIp0f1osI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "94245277378-h4hi0hom9uhst8ig13trmkkbcoidjqmm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "94245277378-psssc0rdls2s4lt2abjk600lo6j4ttn2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.comarca.privaap"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
