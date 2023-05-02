@@ -188,6 +188,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
     final socketService = Provider.of<SocketService>(context, listen: false);
     if (formKey.currentState!.validate()) {
       setState(() => stateLoading = true);
+      if (!await checkVersion(context)) return setState(() => stateLoading = false);
       final Map<String, String> body = {
         "email": emailCtrl.text.trim(),
         "password": passwordCtrl.text.trim(),

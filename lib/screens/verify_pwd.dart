@@ -57,6 +57,7 @@ class _VerifyPasswordState extends State<VerifyPassword> {
   changeInputs() {}
   formComplete(context) async {
     setState(() => stateLoading = true);
+    if (!await checkVersion(context)) return setState(() => stateLoading = false);
     final Map<String, String> body = {
       "password": passwordCtrl.text.trim(),
     };

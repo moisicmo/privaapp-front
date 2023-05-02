@@ -1,13 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 // import 'dart:convert';
 import 'dart:io';
 // import 'package:dio/adapter.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:privaap/components/dialog_action.dart';
 import 'package:privaap/main.dart';
 import 'package:privaap/services/auth_service.dart';
+import 'package:privaap/services/services.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 serviceMethod(BuildContext context, String method, Map<String, dynamic>? data, String urlAPI, bool accessToken,
     FormData? formData) async {
@@ -173,49 +178,48 @@ confirmDeleteSession(bool mounted, BuildContext context, bool voluntary) async {
   Navigator.pushReplacementNamed(context, 'checking');
 }
 
-Future<bool> checkVersion(bool mounted, BuildContext context) async {
-  return true;
-  // try {
-  //   final result = await InternetAddress.lookup('pvt.muserpol.gob.bo');
-  //   if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-  //     final Map<String, dynamic> data = {'version': dotenv.env['version']};
-  //     if (Platform.isIOS) {
-  //       data['store'] = dotenv.env['storeIOS'];
-  //     }
-  //     if (Platform.isAndroid) {
-  //       data['store'] = dotenv.env['storeAndroid'];
-  //     }
-  //     // ignore: use_build_context_synchronously
-  //     var response = await serviceMethod(mounted, context, 'post', data, servicePostVersion(), false, false);
-  //     if (response != null) {
-  //       if (!json.decode(response.body)['error']) {
-  //         return await showDialog(
-  //             barrierDismissible: false,
-  //             context: context,
-  //             builder: (context) => ComponentAnimate(
-  //                 child: DialogOneFunction(
-  //                     title: json.decode(response.body)['message'],
-  //                     message: 'Para mejorar la experiencia, Porfavor actualiza la nueva versión',
-  //                     textButton: 'Actualizar',
-  //                     onPressed: () async {
-  //                       launchUrl(Uri.parse(json.decode(response.body)['data']['url_store']), mode: LaunchMode.externalApplication);
-  //                     })));
-  //       }
-  //       return true;
-  //     }else{
-  //       return false;
-  //     }
-  //   }else{
-  //     return false;
-  //   }
-
-  // } on SocketException catch (e) {
-  //   debugPrint('errC $e');
-  //   callDialogAction(context, 'Verifique su conexión a Internet');
-  //   return false;
-  // } catch (e) {
-  //   debugPrint('errG $e');
-  //   callDialogAction(context, '$e');
-  //   return false;
-  // }
+Future<bool> checkVersion(BuildContext context) async {
+  try {
+    final result = await InternetAddress.lookup('pvt.muserpol.gob.bo');
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      final Map<String, dynamic> data = {'version': dotenv.env['version']};
+      if (Platform.isIOS) {
+        data['store'] = dotenv.env['storeIOS'];
+      }
+      if (Platform.isAndroid) {
+        data['store'] = dotenv.env['storeAndroid'];
+      }
+      // ignore: use_build_context_synchronously
+      var response = await serviceMethod(context, 'post', data, servicePostVersion(), false, null);
+      if (response != null) {
+        debugPrint('${response.data['msg']}');
+        if (response.data['error']) {
+          return await showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => FadeIn(
+                  child: DialogOneFunction(
+                      title: response.data['msg'],
+                      message: 'Para mejorar la experiencia, Porfavor actualiza la nueva versión',
+                      textButton: 'Actualizar',
+                      onPressed: () async {
+                        launchUrl(Uri.parse(response.data['store']), mode: LaunchMode.externalApplication);
+                      })));
+        }
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  } on SocketException catch (e) {
+    debugPrint('errC $e');
+    callDialogAction(context, 'Verifique su conexión a Internet');
+    return false;
+  } catch (e) {
+    debugPrint('errG $e');
+    callDialogAction(context, '$e');
+    return false;
+  }
 }

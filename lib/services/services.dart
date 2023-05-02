@@ -10,6 +10,8 @@ String serviceVerifyUser(int id) => '$url/users/validate/$id';
 //LOGIN OR LOGOUTH
 String serviceAuthSession() => '$url/users/auth';
 
+String servicePostVersion() => '$url/version';
+
 String serviceWeather(double lat, double lon) =>
     'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiOpenWeather&units=metric&lang=es';
 

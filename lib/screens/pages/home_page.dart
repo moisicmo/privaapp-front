@@ -41,8 +41,8 @@ class _WeatherHomeState extends State<WeatherHome> {
   }
 
   getGroup() async {
-    debugPrint('enviando alerta');
     final groupBloc = BlocProvider.of<GroupBloc>(context, listen: false);
+    if (!await checkVersion(context)) return;
     if (!mounted) return;
     var response = await serviceMethod(context, 'get', null, serviceGetAllCirclesTrust(), true, null);
     if (response != null) {
