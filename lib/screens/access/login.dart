@@ -13,7 +13,6 @@ import 'package:privaap/services/auth_service.dart';
 import 'package:privaap/services/push_notifications.dart';
 import 'package:privaap/services/service_method.dart';
 import 'package:privaap/services/services.dart';
-import 'package:privaap/services/socket_service.dart';
 import 'package:provider/provider.dart';
 
 class ScreenLogin extends StatefulWidget {
@@ -25,14 +24,12 @@ class ScreenLogin extends StatefulWidget {
 
 class _ScreenLoginState extends State<ScreenLogin> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  // TextEditingController phoneCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController passwordCtrl = TextEditingController();
   TextEditingController passwordRepeatCtrl = TextEditingController();
   bool hidePassword = true;
   bool hidePasswordRepeat = true;
   bool stateLoading = false;
-  // bool phoneState = false;
   bool emailState = false;
   bool passwordState = false;
   bool passwordConfirmState = false;
@@ -184,8 +181,6 @@ class _ScreenLoginState extends State<ScreenLogin> {
   formComplete(BuildContext context) async {
     final authService = Provider.of<AuthService>(context, listen: false);
     final userData = Provider.of<UserData>(context, listen: false);
-
-    final socketService = Provider.of<SocketService>(context, listen: false);
     if (formKey.currentState!.validate()) {
       setState(() => stateLoading = true);
       if (!await checkVersion(context)) return setState(() => stateLoading = false);
@@ -195,14 +190,13 @@ class _ScreenLoginState extends State<ScreenLogin> {
         "tk_notification": await PushNotificationService.getTokenFirebase()
       };
       if (!mounted) return;
-      final response = await serviceMethod(context, 'post', body, serviceAuthSession(), false, null);
+      final response = await serviceMethod(context, 'post', body, serviceAuthSession(), false);
       setState(() => stateLoading = false);
       if (response != null) {
         await authService.loginCustomer(response.data['token']);
         await userData.updateUserData(userModelFromJson(json.encode(response.data['user']))!);
         prefs!.setString('user', json.encode(response.data['user']));
         prefs!.setString('groups', '');
-        socketService.connect();
         if (!mounted) return;
         Navigator.pushNamed(context, 'loading');
       }

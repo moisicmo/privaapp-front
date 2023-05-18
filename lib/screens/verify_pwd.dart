@@ -20,7 +20,6 @@ class _VerifyPasswordState extends State<VerifyPassword> {
   bool stateLoading = false;
   @override
   Widget build(BuildContext context) {
-    final node = FocusScope.of(context);
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -61,7 +60,7 @@ class _VerifyPasswordState extends State<VerifyPassword> {
     final Map<String, String> body = {
       "password": passwordCtrl.text.trim(),
     };
-    final response = await serviceMethod(context, 'post', body, verifyPwd(), true, null);
+    final response = await serviceMethod(context, 'post', body, verifyPwd(), true);
     setState(() => stateLoading = false);
     if (response != null) {
       if (!mounted) return;

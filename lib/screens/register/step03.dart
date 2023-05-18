@@ -9,13 +9,6 @@ class StepRegister03 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       const Text('Bienvenido a una aplicación que te ayuda a vivir más seguro contigo mismo...'),
-      Center(
-          child: Image.asset(
-        'assets/images/wellcome.png',
-        fit: BoxFit.contain,
-        // height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-      )),
       ButtonComponent(text: 'Terminar', onPressed: () => methodcontinue())
     ]);
   }

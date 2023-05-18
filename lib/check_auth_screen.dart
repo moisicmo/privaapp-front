@@ -9,7 +9,6 @@ import 'package:privaap/providers/user_provider.dart';
 import 'package:privaap/screens/access/login.dart';
 import 'package:privaap/screens/access_gps/loading.dart';
 import 'package:privaap/services/auth_service.dart';
-import 'package:privaap/services/socket_service.dart';
 import 'package:provider/provider.dart';
 
 import 'bloc/blocs.dart';
@@ -21,7 +20,6 @@ class CheckAuthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context, listen: false);
     final groupBloc = BlocProvider.of<GroupBloc>(context, listen: false);
-    final socketService = Provider.of<SocketService>(context, listen: false);
     return Scaffold(
       body: Center(
         child: FutureBuilder(
@@ -60,7 +58,6 @@ class CheckAuthScreen extends StatelessWidget {
               if (prefs!.getString('groups')! != '') {
                 groupBloc.add(UpdateCiclesTrust(circleTrustModelFromJson(prefs!.getString('groups')!)));
               }
-              socketService.connect();
               Future.microtask(() {
                 Navigator.pushReplacement(
                     context,

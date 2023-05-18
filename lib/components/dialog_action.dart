@@ -117,13 +117,11 @@ class _DialogTwoActionState extends State<DialogTwoAction> {
 
 class DialogWidget extends StatefulWidget {
   final Widget component;
-  final Function() actionCorrect;
-  final Function()? actionCancel;
-  final String messageCorrect;
 
-  const DialogWidget(
-      {Key? key, required this.component, required this.actionCorrect, this.actionCancel, required this.messageCorrect})
-      : super(key: key);
+  const DialogWidget({
+    Key? key,
+    required this.component,
+  }) : super(key: key);
 
   @override
   State<DialogWidget> createState() => _DialogWidgetState();
@@ -141,22 +139,6 @@ class _DialogWidgetState extends State<DialogWidget> {
         Column(
           children: [
             widget.component,
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //   children: [
-            //     ButtonWhiteComponent(
-            //       text: 'Cancelar',
-            //       onPressed: stateBottons ? widget.actionCancel ?? () => Navigator.of(context).pop() : () {},
-            //     ),
-            //     ButtonWhiteComponent(
-            //         text: widget.messageCorrect,
-            //         onPressed: () async {
-            //           setState(() => stateBottons = !stateBottons);
-            //           await widget.actionCorrect();
-            //           setState(() => stateBottons = !stateBottons);
-            //         })
-            //   ],
-            // ),
           ],
         )
       ],

@@ -14,7 +14,6 @@ import 'package:privaap/screens/pages/home_page.dart';
 import 'package:privaap/screens/register/register.dart';
 import 'package:privaap/services/auth_service.dart';
 import 'package:privaap/services/push_notifications.dart';
-import 'package:privaap/services/socket_service.dart';
 import 'package:privaap/utils/style.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
@@ -75,8 +74,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ChangeNotifierProvider(create: (_) => AuthService()),
               ChangeNotifierProvider(create: (_) => UserData()),
               ChangeNotifierProvider(create: (_) => SizeScreenModal()),
-              ChangeNotifierProvider(create: (_) => SocketService()),
-              ChangeNotifierProvider(create: (_) => StateTutorial())
+              ChangeNotifierProvider(create: (_) => StateTutorial()),
             ],
             child: MaterialApp(
                 localizationsDelegates: const [
@@ -88,7 +86,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   Locale('es', ''), // Spanish, no country code
                 ],
                 theme: theme(),
-                title: 'El Tiempo CDD',
+                title: 'BP TIEMPO',
                 debugShowCheckedModeBanner: false,
                 navigatorKey: navigatorKey,
                 initialRoute: 'checking',

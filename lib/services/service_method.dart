@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-// import 'dart:convert';
 import 'dart:io';
-// import 'package:dio/adapter.dart';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +12,7 @@ import 'package:privaap/services/services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-serviceMethod(BuildContext context, String method, Map<String, dynamic>? data, String urlAPI, bool accessToken,
-    FormData? formData) async {
+serviceMethod(BuildContext context, String method, Map<String, dynamic>? data, String urlAPI, bool accessToken) async {
   final Map<String, String> headers = {
     "Content-Type": "application/json",
   };
@@ -48,8 +45,8 @@ serviceMethod(BuildContext context, String method, Map<String, dynamic>? data, S
         case 'get':
           try {
             return await dio.get(urlAPI, options: options).timeout(const Duration(seconds: 10)).then((value) {
-              print('response.data ${value.data}');
-              print('value.statusCode ${value.statusCode}');
+              debugPrint('response.data ${value.data}');
+              debugPrint('value.statusCode ${value.statusCode}');
               switch (value.statusCode) {
                 case 200:
                   return value;
@@ -58,7 +55,7 @@ serviceMethod(BuildContext context, String method, Map<String, dynamic>? data, S
                   return null;
               }
             }).catchError((err) {
-              print('err $err');
+              debugPrint('err $err');
               // Navigator.of(context).pop();
               return callDialogAction(context, 'Lamentamos los inconvenientes, intentalo más tarde');
             });
@@ -97,8 +94,8 @@ serviceMethod(BuildContext context, String method, Map<String, dynamic>? data, S
                 .put(urlAPI, data: data, options: options)
                 .timeout(const Duration(seconds: 10))
                 .then((value) {
-              print('response.data ${value.data}');
-              print('value.statusCode ${value.statusCode}');
+              debugPrint('response.data ${value.data}');
+              debugPrint('value.statusCode ${value.statusCode}');
               switch (value.statusCode) {
                 case 200:
                   return value;
@@ -116,28 +113,6 @@ serviceMethod(BuildContext context, String method, Map<String, dynamic>? data, S
         case 'delete':
           try {
             return await dio.delete(urlAPI, options: options).timeout(const Duration(seconds: 10)).then((value) {
-              print('response.data ${value.data}');
-              print('value.statusCode ${value.statusCode}');
-              switch (value.statusCode) {
-                case 200:
-                  return value;
-                default:
-                  callDialogAction(context, value.data['errors'][0]['msg']);
-                  return null;
-              }
-            }).catchError((err) {
-              return callDialogAction(context, 'Lamentamos los inconvenientes, intentalo más tarde');
-            });
-          } on DioError catch (error) {
-            callDialogAction(context, error.response!.data);
-            return null;
-          }
-        case 'postdio':
-          try {
-            return await dio
-                .postUri(Uri.parse(urlAPI), data: formData, options: options)
-                .timeout(const Duration(seconds: 10))
-                .then((value) {
               print('response.data ${value.data}');
               print('value.statusCode ${value.statusCode}');
               switch (value.statusCode) {
@@ -190,7 +165,7 @@ Future<bool> checkVersion(BuildContext context) async {
         data['store'] = dotenv.env['storeAndroid'];
       }
       // ignore: use_build_context_synchronously
-      var response = await serviceMethod(context, 'post', data, servicePostVersion(), false, null);
+      var response = await serviceMethod(context, 'post', data, servicePostVersion(), false);
       if (response != null) {
         debugPrint('${response.data['msg']}');
         if (response.data['error']) {

@@ -16,7 +16,6 @@ import 'package:privaap/screens/pages/groups/card_person.dart';
 import 'package:privaap/screens/pages/groups/look_after.dart';
 import 'package:privaap/services/service_method.dart';
 import 'package:privaap/services/services.dart';
-import 'package:privaap/services/socket_service.dart';
 import 'package:provider/provider.dart';
 
 class CircleTrustScreen extends StatefulWidget {
@@ -30,30 +29,17 @@ class CircleTrustScreen extends StatefulWidget {
 
 class _CircleTrustScreenState extends State<CircleTrustScreen> {
   bool stateLoading = false;
-  SocketService? socketService;
   @override
   void initState() {
     super.initState();
     getCirclesTrust();
-
-    socketService = Provider.of<SocketService>(context, listen: false);
     final groupBloc = BlocProvider.of<GroupBloc>(context, listen: false);
-    socketService!.socket.on('mensaje-personal', (message) {
-      if (message['error']) {
-        return showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) => DialogAction(message: message['msg']));
-      } else {
-        groupBloc.add(UpdateCiclesTrust(circleTrustModelFromJson(json.encode(message['circlesTrustGuest']))));
-      }
-    });
   }
 
   getCirclesTrust() async {
     final groupBloc = BlocProvider.of<GroupBloc>(context, listen: false);
     if (!mounted) return;
-    var response = await serviceMethod(context, 'get', null, serviceGetAllCirclesTrust(), true, null);
+    var response = await serviceMethod(context, 'get', null, serviceGetAllCirclesTrust(), true);
     if (response != null) {
       groupBloc.add(UpdateCiclesTrust(circleTrustModelFromJson(json.encode(response.data))));
     }
@@ -124,10 +110,10 @@ class _CircleTrustScreenState extends State<CircleTrustScreen> {
       "group_id": '$groupId',
     };
     if (!mounted) return;
-    final response = await serviceMethod(context, 'post', body, serviceCreateGuest(), true, null);
+    final response = await serviceMethod(context, 'post', body, serviceCreateGuest(), true);
     setState(() => stateLoading = false);
     if (response != null) {
-      return generateQr(json.encode({'code': response.data['guest']['code'], 'user_id': '${userData!.id}'}));
+      return generateQr(response.data['guest']['code']);
     }
   }
 
@@ -137,8 +123,6 @@ class _CircleTrustScreenState extends State<CircleTrustScreen> {
         builder: (_) {
           return FadeIn(
               child: DialogWidget(
-            messageCorrect: 'Atrás',
-            actionCorrect: () {},
             component: ScreenQr(message: code),
           ));
         });

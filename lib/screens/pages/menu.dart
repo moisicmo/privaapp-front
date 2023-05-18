@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -154,16 +156,10 @@ class _MenuDrawerState extends State<MenuDrawer> {
 
   updateImage() async {
     final userData = Provider.of<UserData>(context, listen: false);
-    String nameImageCover = await saveImage(imageFile!);
-    FormData formData = FormData.fromMap({
-      'archivo': await MultipartFile.fromFile(
-        imageFile!.path,
-        filename: nameImageCover,
-        contentType: MediaType("image", "jpeg"),
-      ),
-    });
+    String image = base64Encode(await imageFile!.readAsBytes());
+    final Map<String, dynamic> body = {'archivo': image};
     if (!mounted) return;
-    final response = await serviceMethod(context, 'postdio', null, changeImage(), true, formData);
+    final response = await serviceMethod(context, 'post', body, changeImage(), true);
     setState(() => stateLoading = false);
     if (response != null) {
       await userData.updateImage(response.data['image']!);

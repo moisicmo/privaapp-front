@@ -87,7 +87,7 @@ class CardGroup extends StatelessWidget {
 
   confirmDelete(mounted, BuildContext context) async {
     final groupBloc = BlocProvider.of<GroupBloc>(context, listen: false);
-    var response = await serviceMethod(context, 'delete', null, serviceRemoveCircleTrust(item!.groupId!), true, null);
+    var response = await serviceMethod(context, 'delete', null, serviceRemoveCircleTrust(item!.groupId!), true);
     if (!mounted) return;
     Navigator.of(context).pop();
     if (response != null) {

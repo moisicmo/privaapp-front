@@ -94,7 +94,7 @@ class _CreateCircleTrustState extends State<CreateCircleTrust> {
       "level": "Bajo"
     };
     if (!mounted) return;
-    var response = await serviceMethod(context, 'post', body, serviceCreateCircleTrust(), true, null);
+    var response = await serviceMethod(context, 'post', body, serviceCreateCircleTrust(), true);
     setState(() => stateLoading = false);
     if (response != null) {
       if (!mounted) return;
@@ -114,8 +114,7 @@ class _CreateCircleTrustState extends State<CreateCircleTrust> {
       "level": levelTrustCtrl!
     };
     if (!mounted) return;
-    var response =
-        await serviceMethod(context, 'put', body, serviceEditCircleTrust(widget.itemEdit!.groupId!), true, null);
+    var response = await serviceMethod(context, 'put', body, serviceEditCircleTrust(widget.itemEdit!.groupId!), true);
     if (response != null) {
       if (!mounted) return;
       return showSuccessful(context, response.data['msg'], () {

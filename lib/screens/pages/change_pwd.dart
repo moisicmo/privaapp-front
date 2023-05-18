@@ -155,7 +155,7 @@ class _ChangePasswordState extends State<ChangePassword> {
     final Map<String, String> body = {
       "email": emailCtrl.text.trim(),
     };
-    final response = await serviceMethod(context, 'post', body, requestChangePwd(), false, null);
+    final response = await serviceMethod(context, 'post', body, requestChangePwd(), false);
     setState(() => stateLoading = false);
     if (response != null) {
       setState(() {
@@ -174,7 +174,7 @@ class _ChangePasswordState extends State<ChangePassword> {
       "code": codeCtrl.text.trim(),
       "password": passwordCtrl.text.trim(),
     };
-    final response = await serviceMethod(context, 'post', body, validateChangePWd(), false, null);
+    final response = await serviceMethod(context, 'post', body, validateChangePWd(), false);
     setState(() => stateLoading = false);
     if (response != null) {
       if (!mounted) return;

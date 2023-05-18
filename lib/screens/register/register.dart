@@ -15,7 +15,6 @@ import 'package:privaap/services/auth_service.dart';
 import 'package:privaap/services/push_notifications.dart';
 import 'package:privaap/services/service_method.dart';
 import 'package:privaap/services/services.dart';
-import 'package:privaap/services/socket_service.dart';
 import 'package:privaap/utils/save_image_divice.dart';
 import 'package:provider/provider.dart';
 
@@ -107,9 +106,6 @@ class _ScreenRegisterState extends State<ScreenRegister> {
   }
 
   connectSocket() {
-    final socketService = Provider.of<SocketService>(context, listen: false);
-
-    socketService.connect();
     Navigator.pushNamed(context, 'loading');
   }
 
@@ -146,7 +142,7 @@ class _ScreenRegisterState extends State<ScreenRegister> {
       "gender": genderCtrl!,
       "password": passwordCtrl.text.trim()
     };
-    final response = await serviceMethod(context, 'post', body, serviceRegister(), false, null);
+    final response = await serviceMethod(context, 'post', body, serviceRegister(), false);
     setState(() => stateLoading = false);
     if (response != null) {
       setState(() {
@@ -160,27 +156,25 @@ class _ScreenRegisterState extends State<ScreenRegister> {
     final authService = Provider.of<AuthService>(context, listen: false);
     final userData = Provider.of<UserData>(context, listen: false);
     setState(() => stateLoading = true);
-    FormData formData;
+    Map<String, dynamic> body;
     if (imageFile != null) {
-      String nameImageCover = await saveImage(imageFile!);
-      formData = FormData.fromMap({
+      // String nameImageCover = await saveImage(imageFile!);
+      String image = base64Encode(await imageFile!.readAsBytes());
+      // final Map<String, dynamic> body = {'archivo': image};
+      body = {
         'code': codeCtrl.text.trim(),
         'tk_notification': await PushNotificationService.getTokenFirebase(),
-        'archivo': await MultipartFile.fromFile(
-          imageFile!.path,
-          filename: nameImageCover,
-          contentType: MediaType("image", "jpeg"),
-        ),
-      });
+        'archivo': image
+      };
     } else {
-      formData = FormData.fromMap({
+      body = {
         'code': codeCtrl.text.trim(),
         'tk_notification': await PushNotificationService.getTokenFirebase(),
         'archivo': null
-      });
+      };
     }
     if (!mounted) return;
-    final response = await serviceMethod(context, 'postdio', null, serviceVerifyUser(idUser), false, formData);
+    final response = await serviceMethod(context, 'post', body, serviceVerifyUser(idUser), false);
     setState(() => stateLoading = false);
     debugPrint('response $response');
     if (response != null) {

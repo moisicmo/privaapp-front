@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:privaap/bloc/blocs.dart';
 import 'package:privaap/components/read_qr.dart';
+import 'package:privaap/models/circle_trust_model.dart';
 import 'package:privaap/screens/pages/groups/card_group.dart';
 import 'package:privaap/services/auth_service.dart';
-import 'package:privaap/services/socket_service.dart';
+import 'package:privaap/services/service_method.dart';
+import 'package:privaap/services/services.dart';
 import 'package:provider/provider.dart';
 
 class ScreenLookAfter extends StatefulWidget {
@@ -43,18 +47,17 @@ class _ScreenLookAfterState extends State<ScreenLookAfter> {
   }
 
   Future readInvitation(resultQr) async {
-    // final groupBloc = BlocProvider.of<GroupBloc>(context, listen: false);
-    final socketService = Provider.of<SocketService>(context, listen: false);
-    socketService.emit('leer-invitacion', {"code": resultQr, "guest": await AuthService.readAccessToken()});
+    final groupBloc = BlocProvider.of<GroupBloc>(context, listen: false);
+    debugPrint('code $resultQr');
 
-    // final Map<String, String> body = {
-    //   "code": resultQr,
-    // };
-    // if (!mounted) return;
-    // var response = await serviceMethod(context, 'post', body, serviceConfirmGuest(), true, null);
-    // if (response != null) {
-    //   debugPrint('creadoooo');
-    //   groupBloc.add(UpdateCiclesTrust(circleTrustModelFromJson(json.encode(response.data['circlesTrust']))));
-    // }
+    final Map<String, String> body = {
+      "code": resultQr,
+    };
+    if (!mounted) return;
+    var response = await serviceMethod(context, 'post', body, serviceConfirmGuest(), true);
+    if (response != null) {
+      debugPrint('creadoooo');
+      groupBloc.add(UpdateCiclesTrust(circleTrustModelFromJson(json.encode(response.data['circlesTrust']))));
+    }
   }
 }

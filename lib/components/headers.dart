@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:privaap/components/paint.dart';
 import 'package:privaap/components/paint_copy.dart';
 
 class HedersComponent extends StatefulWidget {
@@ -9,6 +8,7 @@ class HedersComponent extends StatefulWidget {
   final GlobalKey? keyNotification;
   final bool stateColor;
   final bool stateBack;
+  final Function()? actionBack;
   const HedersComponent(
       {Key? key,
       this.titleHeader,
@@ -16,7 +16,8 @@ class HedersComponent extends StatefulWidget {
       this.center = false,
       this.keyNotification,
       this.stateColor = false,
-      this.stateBack = true})
+      this.stateBack = true,
+      this.actionBack})
       : super(key: key);
 
   @override
@@ -30,9 +31,25 @@ class _HedersComponentState extends State<HedersComponent> {
       AppBar(
           automaticallyImplyLeading: widget.stateBack,
           leadingWidth: 25,
+          leading: GestureDetector(
+            onTap: () {
+              if (widget.actionBack == null) {
+                Navigator.of(context).pop();
+              } else {
+                widget.actionBack!();
+              }
+            },
+            child: const Icon(Icons.arrow_back_ios_new),
+          ),
           title: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Text(widget.titleHeader ?? 'PRIVAAP', style: const TextStyle(fontWeight: FontWeight.w500)),
+            onTap: () {
+              if (widget.actionBack == null) {
+                Navigator.of(context).pop();
+              } else {
+                widget.actionBack!();
+              }
+            },
+            child: Text(widget.titleHeader ?? 'BP TIEMPO', style: const TextStyle(fontWeight: FontWeight.w500)),
           )),
       SizedBox(
         width: double.infinity,

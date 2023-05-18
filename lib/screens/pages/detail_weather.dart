@@ -284,7 +284,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     final weatherBloc = BlocProvider.of<WeatherBloc>(context, listen: false);
     if (!mounted) return;
     var response = await serviceMethod(
-        context, 'get', null, serviceWeather(locationBloc.latitude!, locationBloc.longitude!), false, null);
+        context, 'get', null, serviceWeather(locationBloc.latitude!, locationBloc.longitude!), false);
     setState(() => stateBtnReload = false);
     if (response != null) {
       weatherBloc.add(UpdateWeather(weatherModelFromJson(json.encode(response.data))!));
@@ -344,7 +344,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       "lng": '${locationBloc.longitude!}'
     };
     debugPrint('body');
-    final response = await serviceMethod(context, 'post', body, serviceSendAlert(), true, null);
+    final response = await serviceMethod(context, 'post', body, serviceSendAlert(), true);
     if (response != null) {}
   }
 }

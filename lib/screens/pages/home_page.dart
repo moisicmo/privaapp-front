@@ -44,7 +44,7 @@ class _WeatherHomeState extends State<WeatherHome> {
     final groupBloc = BlocProvider.of<GroupBloc>(context, listen: false);
     if (!await checkVersion(context)) return;
     if (!mounted) return;
-    var response = await serviceMethod(context, 'get', null, serviceGetAllCirclesTrust(), true, null);
+    var response = await serviceMethod(context, 'get', null, serviceGetAllCirclesTrust(), true);
     if (response != null) {
       groupBloc.add(UpdateCiclesTrust(circleTrustModelFromJson(json.encode(response.data))));
       prefs!.setString('groups', json.encode(response.data));
@@ -78,7 +78,7 @@ class _WeatherHomeState extends State<WeatherHome> {
         builder: (BuildContext context) {
           return FadeIn(
               child: DialogTwoAction(
-                  message: '¿Estás seguro de salir de la aplicación PRIVAAP?',
+                  message: '¿Estás seguro de salir de la aplicación BP TIEMPO?',
                   actionCorrect: () => SystemChannels.platform.invokeMethod('SystemNavigator.pop'),
                   messageCorrect: 'Salir'));
         });
@@ -117,7 +117,7 @@ class _ScreenWeatherState extends State<ScreenWeather> {
     debugPrint('longitude ${locationBloc.longitude!}');
     if (!mounted) return;
     var response = await serviceMethod(
-        context, 'get', null, serviceWeather(locationBloc.latitude!, locationBloc.longitude!), false, null);
+        context, 'get', null, serviceWeather(locationBloc.latitude!, locationBloc.longitude!), false);
     if (response != null) {
       weatherBloc.add(UpdateWeather(weatherModelFromJson(json.encode(response.data))!));
     }

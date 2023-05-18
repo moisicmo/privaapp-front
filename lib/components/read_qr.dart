@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -96,8 +94,6 @@ class _ReadQrState extends State<ReadQr> {
         builder: (_) {
           return FadeIn(
               child: DialogWidget(
-            messageCorrect: 'Atrás',
-            actionCorrect: () {},
             component: Column(
               children: [
                 const HedersComponent(title: 'Lector de invitaciones'),

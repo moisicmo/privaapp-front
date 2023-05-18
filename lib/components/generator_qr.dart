@@ -1,15 +1,22 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:privaap/bloc/group/group_bloc.dart';
 import 'package:privaap/components/button.dart';
 import 'package:privaap/components/headers.dart';
+import 'package:privaap/components/screenshot.dart';
+import 'package:privaap/models/circle_trust_model.dart';
+import 'package:privaap/services/service_method.dart';
+import 'package:privaap/services/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:screenshot/screenshot.dart';
+// import 'package:screenshot/screenshot.dart';
 
 class ScreenQr extends StatefulWidget {
   final String message;
@@ -25,7 +32,13 @@ class _ScreenQrState extends State<ScreenQr> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const HedersComponent(title: 'Invitación'),
+        HedersComponent(
+          title: 'Invitación',
+          actionBack: () {
+            Navigator.of(context).pop();
+            refreshGroups();
+          },
+        ),
         Screenshot(
             controller: screenshotController,
             child: Container(
@@ -70,6 +83,16 @@ class _ScreenQrState extends State<ScreenQr> {
         ),
       ],
     );
+  }
+
+  refreshGroups() async {
+    debugPrint('actualizando grupos');
+    final groupBloc = BlocProvider.of<GroupBloc>(context, listen: false);
+    if (!mounted) return;
+    var response = await serviceMethod(context, 'get', null, serviceGetAllCirclesTrust(), true);
+    if (response != null) {
+      groupBloc.add(UpdateCiclesTrust(circleTrustModelFromJson(json.encode(response.data))));
+    }
   }
 
   _shareQrCode() async {
